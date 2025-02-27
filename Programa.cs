@@ -11,7 +11,7 @@ namespace ControlVirtual
             ApplicationConfiguration.Initialize();
             VariablesGlobales.CodigoAplicacion = AplicacionLogica.ObtenerCodigoAplicacion();
             VariablesGlobales.CodigoMinimo = int.Parse(VariablesGlobales.CodigoAplicacion.ToString() + "10000");
-            Application.Run(new Vistas.frmProductos());
+            Application.Run(new Vistas.Catalogos.frmProductos());
         }
     }
 }
