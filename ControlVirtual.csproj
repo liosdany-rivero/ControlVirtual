@@ -40,6 +40,8 @@
   <ItemGroup>
     <Folder Include="Vistas\Aplicacion\" />
     <Folder Include="Vistas\Catalogos\" />
+    <Folder Include="Vistas\Kiosco\" />
+    <Folder Include="Vistas\Almacen\" />
   </ItemGroup>
 
 </Project>
