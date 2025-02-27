@@ -1,3 +1,6 @@
+
+using ControlVirtual.Logica;
+
 namespace ControlVirtual
 {
     internal static class Programa
@@ -5,8 +8,10 @@ namespace ControlVirtual
         [STAThread]
         static void Main()
         {
-            ApplicationConfiguration.Initialize(); 
-            Application.Run(new Vistas.Inicio());
+            ApplicationConfiguration.Initialize();
+            VariablesGlobales.CodigoAplicacion = AplicacionLogica.ObtenerCodigoAplicacion();
+            VariablesGlobales.CodigoMinimo = int.Parse(VariablesGlobales.CodigoAplicacion.ToString() + "10000");
+            Application.Run(new Vistas.frmProductos());
         }
     }
 }
