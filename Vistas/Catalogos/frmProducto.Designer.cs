@@ -1,6 +1,6 @@
 ﻿
 
-namespace ControlVirtual.Vistas
+namespace ControlVirtual.Vistas.Catalogos
 {
     partial class frmProductos
     {

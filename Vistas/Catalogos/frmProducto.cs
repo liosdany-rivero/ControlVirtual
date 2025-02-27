@@ -3,7 +3,7 @@ using ControlVirtual.Modelos;
 using ControlVirtual.Vistas.Gestion;
 
 
-namespace ControlVirtual.Vistas
+namespace ControlVirtual.Vistas.Catalogos
 {
     public partial class frmProductos : Form
     {
