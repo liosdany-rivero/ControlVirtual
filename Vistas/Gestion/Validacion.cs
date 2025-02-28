@@ -1,4 +1,7 @@
-﻿namespace ControlVirtual.Vistas.Gestion
+﻿using System.Windows.Forms;
+using ControlVirtual.Logica.Gestion;
+
+namespace ControlVirtual.Vistas.Gestion
 {
     class Validacion
     {
@@ -76,9 +79,102 @@
             }
         }
 
+        // Control Fecha (dd/mm/yy)
+        public static int ValidarControlTurno(Control Desde, Control Hasta, int ultimoTurnoId, ErrorProvider eProvider)
+        {
+            string mensaje;
+  
+            if (!DateOnly.TryParse(Desde.Text, out DateOnly FechaInicial))
+            {
+                mensaje = "Debe introducirce una fecha.";
+                MostrarError(Desde, eProvider, mensaje);
+                return 0;
+            }
+            else if (!DateOnly.TryParse(Hasta.Text, out DateOnly FechaFinal))
+            {
+                mensaje = "Debe introducirce una fecha.";
+                MostrarError(Hasta, eProvider, mensaje);
+                return 0;
+            }
+            else if (FechaInicial > FechaFinal)
+            {
+                mensaje = "La fecha final debe ser igual o mayor que la fecha inicial.";
+                MostrarError(Desde, eProvider, mensaje);
+                MostrarError(Hasta, eProvider, mensaje);
+                return 0;
+            }
+            else if (FechaInicial.Year != FechaFinal.Year)
+            {
+                mensaje = "La fecha final debe pertenecer al mismo año de la fecha inicial.";
+                MostrarError(Desde, eProvider, mensaje);
+                MostrarError(Hasta, eProvider, mensaje);
+                return 0;
+            }
+            else
+            {
+                int nuevoAño = FechaInicial.Year;
+                int nuevoTurnoid;
+
+                if (ultimoTurnoId == 0)
+                {
+                    nuevoTurnoid = Conversiones.ObtenerTurnoId(nuevoAño, FechaInicial, FechaFinal, 1);
+                }
+                else
+                {
+                    var ultimo = Conversiones.ObtenerPeriodo(ultimoTurnoId);
+                    int ultimoDesde = ultimo.DiaInicial.DayOfYear;
+                    int ultimoHasta = ultimo.DiaFinal.DayOfYear;
+                    int nuevoDesde = FechaInicial.DayOfYear;
+                    int nuevoHasta = FechaFinal.DayOfYear;
+                    int ultimoAñoHasta = ultimo.Año * 1000 + ultimoHasta;
+                    int nuevoAñoDesde = nuevoAño * 1000 + nuevoDesde;
+
+                    if (nuevoAñoDesde < ultimoAñoHasta)
+                    {
+                        mensaje = "La fecha inicial no puede ser inferior a la ultima fecha registrada.";
+                        MostrarError(Desde, eProvider, mensaje);
+                        MostrarError(Hasta, eProvider, mensaje);
+                        return 0;
+                    }
+                    else if (nuevoAñoDesde == ultimoAñoHasta)
+                    {
+                        int nuevoTurno = ultimo.Turno + 1;
+                        nuevoTurnoid = Conversiones.ObtenerTurnoId(nuevoAño, FechaInicial, FechaFinal, nuevoTurno);
+                    }
+                    else 
+                    {
+                        nuevoTurnoid = Conversiones.ObtenerTurnoId(nuevoAño, FechaInicial, FechaFinal, 1);
+                    }
+
+                    if (ultimoTurnoId >= nuevoTurnoid)
+                    {
+                        mensaje = "El turno debe ser mayor que el último registrado en el sistema.";
+                        MostrarError(Desde, eProvider, mensaje);
+                        MostrarError(Hasta, eProvider, mensaje);
+                        return 0;
+                    }
+                    else
+                    {
+                        LimpiarError(Desde, eProvider);
+                        LimpiarError(Hasta, eProvider);
+                        return nuevoTurnoid;
+                    }
+                    LimpiarError(Desde, eProvider);
+                    LimpiarError(Hasta, eProvider);
+                    return nuevoTurnoid;
+                }
+                LimpiarError(Desde, eProvider);
+                LimpiarError(Hasta, eProvider);
+                return nuevoTurnoid;
+            }
+        }
+    
+
+
+
         //TODO: Implementar la validacion de fecha y de contraseña
 
-        //// Validar fecha válida
+        // Validar fecha válida
         //public static bool ValidarFecha(Control control, string mensajeError = "Fecha inválida")
         //{
         //    if (!DateTime.TryParse(control.Text, out _))

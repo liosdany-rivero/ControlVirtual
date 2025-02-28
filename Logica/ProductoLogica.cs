@@ -197,7 +197,6 @@ namespace ControlVirtual.Logica
             return oLista;
         }
 
-
         public bool Eliminar(Productos obj)
         {
             bool respuesta = true;

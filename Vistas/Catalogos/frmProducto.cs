@@ -225,5 +225,6 @@ namespace ControlVirtual.Vistas.Catalogos
             dgvProductos.DataSource = ProductoLogica.Instancia.Buscar(txtProductoId.Text, txtProducto.Text, txtCosto.Text, txtVenta.Text);
             dgvProductos.Columns["ProductoId"].HeaderText = "Código";
         }
+
     }
 }
