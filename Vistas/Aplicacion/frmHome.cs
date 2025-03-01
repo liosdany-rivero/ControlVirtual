@@ -12,7 +12,6 @@ namespace ControlVirtual.Vistas.Aplicacion
         private int ultimoTurnoIdApertura;
 
         // Metodos de formulario
-
         public frmHome()
         {
             InitializeComponent();
@@ -26,7 +25,20 @@ namespace ControlVirtual.Vistas.Aplicacion
             dgvTurnos.Height = this.Height - 194;
         }
 
-        // Controles del lateral izquierdo
+        // Controles de formulario
+        private void btnMinimizar_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void btnSalir_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        // Controles de turno
+
+
         private void dgvTurnos_MouseClick(object sender, MouseEventArgs e)
         {
             var hitTestInfo = dgvTurnos.HitTest(e.X, e.Y);
@@ -81,12 +93,6 @@ namespace ControlVirtual.Vistas.Aplicacion
             }
         }
 
-        private void btnEditar_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
         private void btnEliminarTurno_Click(object sender, EventArgs e)
         {
             DialogResult dialogResult = MessageBox.Show("¿Desea eliminar el último turno?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -99,15 +105,14 @@ namespace ControlVirtual.Vistas.Aplicacion
                 };
 
                 bool respuesta = TurnoLogica.Instancia.Eliminar(Objeto);
+                //TODO: Aqui tengo que eliminar todas las tablas que tienen ese dia implementado cuando vaya a eliminar el TurnoID de la base de datos
                 if (respuesta)
                 {
-                    VariablesGlobales.ultimoTurnoId = TurnoLogica.Instancia.UltimoId();
                     Listar();
                     Limpiar();
                 }
             }
         }
-
 
         private void btnCambiarPeriodo_Click(object sender, EventArgs e)
         {
@@ -121,22 +126,11 @@ namespace ControlVirtual.Vistas.Aplicacion
             frmEmergente.ShowDialog();
         }
 
-        // Controles de formulario
-
-        private void btnMinimizar_Click(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Minimized;
-        }
-
-        private void btnSalir_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         //  Metodos generales
-
         public void Listar()
         {
+            VariablesGlobales.ultimoTurnoId = TurnoLogica.Instancia.UltimoId();
+            ultimoTurnoIdApertura = TurnoLogica.Instancia.UltimoIdApertura();
             dgvTurnos.DataSource = null;
             dgvTurnos.DataSource = TurnoLogica.Instancia.Listar(ultimoTurnoIdApertura);
 
@@ -166,7 +160,7 @@ namespace ControlVirtual.Vistas.Aplicacion
             }
             catch (Exception ex)
             {
-                //ToDo: Añadir esta exepcion al log.
+                //TODO: Añadir esta exepcion al log.
             }
         }
 
@@ -178,8 +172,6 @@ namespace ControlVirtual.Vistas.Aplicacion
         private void frmEmergente_FormClosed(object sender, FormClosedEventArgs e)
         {
             // Método a ejecutar cuando el formulario emergente se cierra
-            VariablesGlobales.ultimoTurnoId = TurnoLogica.Instancia.UltimoId();
-            ultimoTurnoIdApertura = TurnoLogica.Instancia.UltimoIdApertura();
             Limpiar();
             Listar();
         }
