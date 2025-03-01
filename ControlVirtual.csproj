@@ -28,6 +28,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Vistas\Aplicacion\frmCambiarPeriodo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Vistas\Aplicacion\frmMensajeSimple.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Vistas\Aplicacion\frmMensaje.cs">
       <SubType>Form</SubType>
     </Compile>

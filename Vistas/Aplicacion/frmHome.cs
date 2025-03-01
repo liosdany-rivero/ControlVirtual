@@ -3,6 +3,7 @@ using ControlVirtual.Modelos;
 using ControlVirtual.Vistas.Gestion;
 using System.Collections.Generic;
 using ControlVirtual;
+using System.Windows.Forms;
 
 
 namespace ControlVirtual.Vistas.Aplicacion
@@ -95,12 +96,8 @@ namespace ControlVirtual.Vistas.Aplicacion
 
         private void btnEliminarTurno_Click(object sender, EventArgs e)
         {
-            VariablesGlobales.LaRespuestaEsSi = false;
             frmMensaje frmMsj = new frmMensaje("¿Desea eliminar el último turno?");
-            frmMsj.ShowDialog();
-
-
-            if (VariablesGlobales.LaRespuestaEsSi)
+            if (frmMsj.ShowDialog() == DialogResult.OK)
             {
                 Turnos Objeto = new Turnos()
                 {
@@ -112,14 +109,32 @@ namespace ControlVirtual.Vistas.Aplicacion
                 {
                     Listar();
                     Limpiar();
-                    VariablesGlobales.LaRespuestaEsSi = false;
                 }
             }
         }
 
         private void btnCambiarPeriodo_Click(object sender, EventArgs e)
         {
+            Limpiar();
+            frmCambiarPeriodo frm = new frmCambiarPeriodo();
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                // Verifica si TurnoIdSiguiente es nulo
+                if (frm.TurnoIdSiguiente == null)
+                {
+                    // Llama al método Listar si TurnoIdSiguiente es nulo
+                    Listar();
+                }
+                else
+                {
+                    // Convierte los valores a int y llama al método ListarAperturaAnterior
+                    int turnoIdActual = Convert.ToInt32(frm.TurnoIdActual);
+                    int turnoIdSiguiente = Convert.ToInt32(frm.TurnoIdSiguiente);
 
+                    // Llama al método con los parámetros correspondientes
+                    ListarAperturaAnterior(turnoIdActual, turnoIdSiguiente);
+                } 
+            }
         }
 
         private void btnCerrarPeriodo_Click(object sender, EventArgs e)
@@ -146,6 +161,22 @@ namespace ControlVirtual.Vistas.Aplicacion
             // Formatear la columna de fecha
             dgvTurnos.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvTurnos_CellFormatting);
         }
+
+        public void ListarAperturaAnterior(int TurnoIdInicial, int TurnoIdFinal)
+        {
+            dgvTurnos.DataSource = null;
+            dgvTurnos.DataSource = TurnoLogica.Instancia.ListarAperturaAnterior(TurnoIdInicial, TurnoIdFinal);
+
+            // Ocultar columnas específicas
+            dgvTurnos.Columns["TurnoId"].Visible = false;
+            dgvTurnos.Columns["Año"].Visible = false;
+            dgvTurnos.Columns["EsApertura"].Visible = false;
+
+            // Formatear la columna de fecha
+            dgvTurnos.CellFormatting += new DataGridViewCellFormattingEventHandler(dgvTurnos_CellFormatting);
+        }
+
+
 
         private void dgvTurnos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {

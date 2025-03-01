@@ -87,6 +87,75 @@ namespace ControlVirtual.Logica
             }
             return oLista;
         }
+        public List<Turnos> ListarApertura()
+        {
+            List<Turnos> oLista = new List<Turnos>();
+
+            using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+            {
+                conexion.Open();
+                string query = "SELECT * FROM Turnos WHERE EsApertura = 1";
+                SQLiteCommand cmd = new SQLiteCommand(query, conexion);
+                cmd.CommandType = System.Data.CommandType.Text;
+
+                using (SQLiteDataReader dr = cmd.ExecuteReader())
+                {
+                    int TurnoId_;
+                    while (dr.Read())
+                    {
+                        TurnoId_ = int.Parse(dr["TurnoId"].ToString());
+                        var conversion = Conversiones.ObtenerPeriodo(TurnoId_);
+
+                        oLista.Add(new Turnos()
+                        {
+                            TurnoId = TurnoId_,
+                            EsApertura = int.Parse(dr["EsApertura"].ToString()),
+                            Año = conversion.Año,
+                            Desde = conversion.DiaInicial,
+                            Hasta = conversion.DiaFinal,
+                            Turno = conversion.Turno,
+                        });
+                    }
+                }
+            }
+            return oLista;
+        }
+
+        public List<Turnos> ListarAperturaAnterior(int TurnoIdInicial, int TurnoIdFinal)
+        {
+            List<Turnos> oLista = new List<Turnos>();
+
+            using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+            {
+                conexion.Open();
+                string query = "SELECT * FROM Turnos WHERE TurnoId >= @MinTurnoId AND TurnoId < @MaxTurnoId";
+                SQLiteCommand cmd = new SQLiteCommand(query, conexion);
+                cmd.Parameters.AddWithValue("@MinTurnoId", TurnoIdInicial);
+                cmd.Parameters.AddWithValue("@MaxTurnoId", TurnoIdFinal);
+                cmd.CommandType = System.Data.CommandType.Text;
+
+                using (SQLiteDataReader dr = cmd.ExecuteReader())
+                {
+                    int TurnoId_;
+                    while (dr.Read())
+                    {
+                        TurnoId_ = int.Parse(dr["TurnoId"].ToString());
+                        var conversion = Conversiones.ObtenerPeriodo(TurnoId_);
+
+                        oLista.Add(new Turnos()
+                        {
+                            TurnoId = TurnoId_,
+                            EsApertura = int.Parse(dr["EsApertura"].ToString()),
+                            Año = conversion.Año,
+                            Desde = conversion.DiaInicial,
+                            Hasta = conversion.DiaFinal,
+                            Turno = conversion.Turno,
+                        });
+                    }
+                }
+            }
+            return oLista;
+        }
 
         public int UltimoId()
         {
@@ -162,6 +231,5 @@ namespace ControlVirtual.Logica
             }
             return respuesta;
         }
-
     }
 }

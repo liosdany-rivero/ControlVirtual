@@ -6,29 +6,25 @@ using ControlVirtual.Logica.Gestion;
 
 namespace ControlVirtual.Vistas.Aplicacion
 {
-    public partial class frmMensaje : Form
+    public partial class frmMensajeSimple : Form
     {
-        public frmMensaje(string Informacion)
+        public frmMensajeSimple(string Informacion)
         {
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;
             lblInformacion.Text = Informacion;
         }
 
-        private void frmMensaje_MouseDown(object sender, MouseEventArgs e)
+        private void frmMensajeSimple_MouseDown(object sender, MouseEventArgs e)
         {
             MoverFormularios.ReleaseCapture();
             MoverFormularios.SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
 
-        private void btnSi_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
-        }
-        private void btnNo_Click(object sender, EventArgs e)
+        private void btnAceptar_Click(object sender, EventArgs e)
         {
             this.Close();
         }
     }
 }
+
