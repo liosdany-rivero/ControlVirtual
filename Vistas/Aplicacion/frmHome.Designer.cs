@@ -48,6 +48,7 @@ namespace ControlVirtual.Vistas.Aplicacion
             lblHasta = new Label();
             kpdDesde = new ControlVirtual.Vistas.Gestion.KPDatePicker();
             kpHasta = new ControlVirtual.Vistas.Gestion.KPDatePicker();
+            btnMinimizar = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvTurnos).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eProvider).BeginInit();
             SuspendLayout();
@@ -99,19 +100,20 @@ namespace ControlVirtual.Vistas.Aplicacion
             dgvTurnos.RowsDefaultCellStyle = dataGridViewCellStyle4;
             dgvTurnos.Size = new Size(277, 407);
             dgvTurnos.TabIndex = 0;
-            dgvTurnos.CellContentClick += dgvTurnos_CellContentClick;
             dgvTurnos.MouseClick += dgvTurnos_MouseClick;
             // 
             // btnSalir
             // 
+            btnSalir.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnSalir.FlatStyle = FlatStyle.Flat;
             btnSalir.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
             btnSalir.ForeColor = SystemColors.WindowFrame;
-            btnSalir.Location = new Point(1228, 2);
+            btnSalir.ImageAlign = ContentAlignment.TopRight;
+            btnSalir.Location = new Point(1246, 2);
             btnSalir.Name = "btnSalir";
-            btnSalir.Size = new Size(51, 34);
+            btnSalir.Size = new Size(32, 34);
             btnSalir.TabIndex = 13;
-            btnSalir.Text = "&Salir";
+            btnSalir.Text = "X";
             btnSalir.UseVisualStyleBackColor = false;
             btnSalir.Click += btnSalir_Click;
             // 
@@ -122,6 +124,7 @@ namespace ControlVirtual.Vistas.Aplicacion
             // 
             // btnCrearTurno
             // 
+            btnCrearTurno.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnCrearTurno.FlatStyle = FlatStyle.Flat;
             btnCrearTurno.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
             btnCrearTurno.ForeColor = SystemColors.WindowFrame;
@@ -135,10 +138,11 @@ namespace ControlVirtual.Vistas.Aplicacion
             // 
             // btnCerrarPeriodo
             // 
+            btnCerrarPeriodo.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnCerrarPeriodo.FlatStyle = FlatStyle.Flat;
             btnCerrarPeriodo.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
             btnCerrarPeriodo.ForeColor = SystemColors.WindowFrame;
-            btnCerrarPeriodo.Location = new Point(156, 555);
+            btnCerrarPeriodo.Location = new Point(152, 555);
             btnCerrarPeriodo.Name = "btnCerrarPeriodo";
             btnCerrarPeriodo.Size = new Size(133, 33);
             btnCerrarPeriodo.TabIndex = 18;
@@ -149,6 +153,7 @@ namespace ControlVirtual.Vistas.Aplicacion
             // btnCambiarPeriodo
             // 
             btnCambiarPeriodo.AccessibleRole = AccessibleRole.None;
+            btnCambiarPeriodo.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnCambiarPeriodo.FlatStyle = FlatStyle.Flat;
             btnCambiarPeriodo.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
             btnCambiarPeriodo.ForeColor = SystemColors.WindowFrame;
@@ -162,14 +167,15 @@ namespace ControlVirtual.Vistas.Aplicacion
             // 
             // btnEliminarTurno
             // 
+            btnEliminarTurno.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnEliminarTurno.FlatStyle = FlatStyle.Flat;
             btnEliminarTurno.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
             btnEliminarTurno.ForeColor = SystemColors.WindowFrame;
-            btnEliminarTurno.Location = new Point(156, 516);
+            btnEliminarTurno.Location = new Point(153, 516);
             btnEliminarTurno.Name = "btnEliminarTurno";
-            btnEliminarTurno.Size = new Size(133, 33);
+            btnEliminarTurno.Size = new Size(132, 33);
             btnEliminarTurno.TabIndex = 20;
-            btnEliminarTurno.Text = "&Eliminar";
+            btnEliminarTurno.Text = "Elimi&nar";
             btnEliminarTurno.UseVisualStyleBackColor = false;
             btnEliminarTurno.Click += btnEliminarTurno_Click;
             // 
@@ -186,6 +192,7 @@ namespace ControlVirtual.Vistas.Aplicacion
             // 
             // lblDesde
             // 
+            lblDesde.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             lblDesde.AutoSize = true;
             lblDesde.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblDesde.ForeColor = SystemColors.WindowFrame;
@@ -197,6 +204,7 @@ namespace ControlVirtual.Vistas.Aplicacion
             // 
             // lblHasta
             // 
+            lblHasta.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             lblHasta.AutoSize = true;
             lblHasta.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblHasta.ForeColor = SystemColors.WindowFrame;
@@ -208,6 +216,7 @@ namespace ControlVirtual.Vistas.Aplicacion
             // 
             // kpdDesde
             // 
+            kpdDesde.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             kpdDesde.CalendarFont = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
             kpdDesde.CalendarForeColor = SystemColors.ButtonFace;
             kpdDesde.CalendarMonthBackground = SystemColors.GrayText;
@@ -226,6 +235,7 @@ namespace ControlVirtual.Vistas.Aplicacion
             // 
             // kpHasta
             // 
+            kpHasta.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             kpHasta.CalendarFont = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
             kpHasta.CalendarForeColor = SystemColors.ButtonFace;
             kpHasta.CalendarMonthBackground = SystemColors.GrayText;
@@ -242,12 +252,28 @@ namespace ControlVirtual.Vistas.Aplicacion
             kpHasta.Size = new Size(122, 29);
             kpHasta.TabIndex = 30;
             // 
+            // btnMinimizar
+            // 
+            btnMinimizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnMinimizar.FlatStyle = FlatStyle.Flat;
+            btnMinimizar.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
+            btnMinimizar.ForeColor = SystemColors.WindowFrame;
+            btnMinimizar.ImageAlign = ContentAlignment.TopRight;
+            btnMinimizar.Location = new Point(1208, 2);
+            btnMinimizar.Name = "btnMinimizar";
+            btnMinimizar.Size = new Size(32, 34);
+            btnMinimizar.TabIndex = 31;
+            btnMinimizar.Text = "_";
+            btnMinimizar.UseVisualStyleBackColor = false;
+            btnMinimizar.Click += btnMinimizar_Click;
+            // 
             // frmHome
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = Color.FromArgb(10, 10, 10);
             ClientSize = new Size(1280, 600);
+            Controls.Add(btnMinimizar);
             Controls.Add(kpHasta);
             Controls.Add(kpdDesde);
             Controls.Add(lblHasta);
@@ -263,8 +289,6 @@ namespace ControlVirtual.Vistas.Aplicacion
             ForeColor = SystemColors.Window;
             FormBorderStyle = FormBorderStyle.None;
             Name = "frmHome";
-            Load += frmHome_Load;
-            MouseDown += frmHome_MouseDown;
             ((System.ComponentModel.ISupportInitialize)dgvTurnos).EndInit();
             ((System.ComponentModel.ISupportInitialize)eProvider).EndInit();
             ResumeLayout(false);
@@ -288,5 +312,6 @@ namespace ControlVirtual.Vistas.Aplicacion
         private Label lblHasta;
         private Gestion.KPDatePicker kpdDesde;
         private Gestion.KPDatePicker kpHasta;
+        private Button btnMinimizar;
     }
 }

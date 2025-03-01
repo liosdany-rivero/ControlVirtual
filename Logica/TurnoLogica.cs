@@ -52,16 +52,18 @@ namespace ControlVirtual.Logica
             return respuesta;
         }
 
-        public List<Turnos> Listar()
+        public List<Turnos> Listar(int TurnoIdApertura)
         {
             List<Turnos> oLista = new List<Turnos>();
 
             using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
             {
                 conexion.Open();
-                string query = "SELECT * FROM Turnos";
+                string query = "SELECT * FROM Turnos WHERE TurnoId >= @TurnoId";
                 SQLiteCommand cmd = new SQLiteCommand(query, conexion);
+                cmd.Parameters.Add(new SQLiteParameter("@TurnoId", TurnoIdApertura));
                 cmd.CommandType = System.Data.CommandType.Text;
+
 
                 using (SQLiteDataReader dr = cmd.ExecuteReader())
                 {
@@ -112,6 +114,33 @@ namespace ControlVirtual.Logica
             return id;
         }
 
+        public int UltimoIdApertura()
+        {
+            int id = 0;
+
+            using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+            {
+                conexion.Open();
+                string query = "SELECT MAX(TurnoId) AS UltimoTurnoId FROM Turnos WHERE EsApertura = 1";
+                SQLiteCommand cmd = new SQLiteCommand(query, conexion);
+                cmd.CommandType = System.Data.CommandType.Text;
+
+                using (SQLiteDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read()) // Solo hay una fila (aunque la tabla esté vacía)
+                    {
+                        // Verificar si el valor es NULL
+                        if (!dr.IsDBNull(dr.GetOrdinal("UltimoTurnoId")))
+                        {
+                            id = int.Parse(dr["UltimoTurnoId"].ToString());
+                        }
+                    }
+                }
+            }
+            return id;
+        }
+
+
         public bool Eliminar(Turnos obj)
         {
             bool respuesta = true;
@@ -119,17 +148,20 @@ namespace ControlVirtual.Logica
             using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
             {
                 conexion.Open();
-                string query = "DELETE FROM Productos WHERE TurnoId=@TurnoId";
-                SQLiteCommand cmd = new SQLiteCommand(query, conexion);
-                cmd.Parameters.Add(new SQLiteParameter("@TurnoId", obj.TurnoId));
-                cmd.CommandType = System.Data.CommandType.Text;
-
-                if (cmd.ExecuteNonQuery() < 1)
+                string query = "DELETE FROM Turnos WHERE TurnoId=@TurnoId";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, conexion))
                 {
-                    respuesta = false;
+                    cmd.Parameters.AddWithValue("@TurnoId", obj.TurnoId);
+                    cmd.CommandType = System.Data.CommandType.Text;
+
+                    if (cmd.ExecuteNonQuery() < 1)
+                    {
+                        respuesta = false;
+                    }
                 }
             }
             return respuesta;
         }
+
     }
 }

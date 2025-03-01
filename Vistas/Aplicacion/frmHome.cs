@@ -2,31 +2,28 @@
 using ControlVirtual.Modelos;
 using ControlVirtual.Vistas.Gestion;
 using System.Collections.Generic;
+using ControlVirtual;
 
 
 namespace ControlVirtual.Vistas.Aplicacion
 {
     public partial class frmHome : Form
     {
-        private int ultimoTurnoId;
+        private int ultimoTurnoIdApertura;
 
         // Metodos de formulario
 
         public frmHome()
         {
             InitializeComponent();
-        }
-
-        private void frmHome_Load(object sender, EventArgs e)
-        {
-            ultimoTurnoId = TurnoLogica.Instancia.UltimoId();
+            VariablesGlobales.ultimoTurnoId = TurnoLogica.Instancia.UltimoId();
+            ultimoTurnoIdApertura = TurnoLogica.Instancia.UltimoIdApertura();
             Listar();
-        }
-
-        private void frmHome_MouseDown(object sender, MouseEventArgs e)
-        {
-            MoverFormularios.ReleaseCapture();
-            MoverFormularios.SendMessage(this.Handle, 0x112, 0xf012, 0);
+            this.WindowState = FormWindowState.Normal;
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point(0, 0);
+            this.Size = new Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
+            dgvTurnos.Height = this.Height - 194;
         }
 
         // Controles del lateral izquierdo
@@ -50,14 +47,14 @@ namespace ControlVirtual.Vistas.Aplicacion
 
                 // Validaciones
                 int nuevoTurnoId = 0;
-                nuevoTurnoId = Validacion.ValidarControlTurno(kpdDesde, kpHasta, ultimoTurnoId, eProvider);
+                nuevoTurnoId = Validacion.ValidarControlTurno(kpdDesde, kpHasta, VariablesGlobales.ultimoTurnoId, eProvider);
 
                 // Si pasa todas las validaciones
                 if (nuevoTurnoId > 0)
                 {
                     int esApertura = 0;
 
-                    if (ultimoTurnoId == 0)
+                    if (VariablesGlobales.ultimoTurnoId == 0)
                     {
                         esApertura = 1;
                     }
@@ -71,7 +68,7 @@ namespace ControlVirtual.Vistas.Aplicacion
                     bool respuesta = TurnoLogica.Instancia.Crear(Objeto);
                     if (respuesta)
                     {
-                        ultimoTurnoId = TurnoLogica.Instancia.UltimoId();
+                        VariablesGlobales.ultimoTurnoId = TurnoLogica.Instancia.UltimoId();
                         Listar();
                         Limpiar();
                     }
@@ -84,10 +81,33 @@ namespace ControlVirtual.Vistas.Aplicacion
             }
         }
 
-        private void btnEliminarTurno_Click(object sender, EventArgs e)
+        private void btnEditar_Click(object sender, EventArgs e)
         {
 
         }
+
+
+        private void btnEliminarTurno_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("¿Desea eliminar el último turno?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (dialogResult == DialogResult.Yes)
+            {
+                Turnos Objeto = new Turnos()
+                {
+                    TurnoId = VariablesGlobales.ultimoTurnoId
+                };
+
+                bool respuesta = TurnoLogica.Instancia.Eliminar(Objeto);
+                if (respuesta)
+                {
+                    VariablesGlobales.ultimoTurnoId = TurnoLogica.Instancia.UltimoId();
+                    Listar();
+                    Limpiar();
+                }
+            }
+        }
+
 
         private void btnCambiarPeriodo_Click(object sender, EventArgs e)
         {
@@ -96,26 +116,29 @@ namespace ControlVirtual.Vistas.Aplicacion
 
         private void btnCerrarPeriodo_Click(object sender, EventArgs e)
         {
-
+            frmCerrarPeriodo frmEmergente = new frmCerrarPeriodo();
+            frmEmergente.FormClosed += frmEmergente_FormClosed;
+            frmEmergente.ShowDialog();
         }
 
+        // Controles de formulario
+
+        private void btnMinimizar_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-
-
-
-
-
         //  Metodos generales
 
         public void Listar()
         {
             dgvTurnos.DataSource = null;
-            dgvTurnos.DataSource = TurnoLogica.Instancia.Listar();
+            dgvTurnos.DataSource = TurnoLogica.Instancia.Listar(ultimoTurnoIdApertura);
 
             // Ocultar columnas específicas
             dgvTurnos.Columns["TurnoId"].Visible = false;
@@ -128,27 +151,38 @@ namespace ControlVirtual.Vistas.Aplicacion
 
         private void dgvTurnos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (dgvTurnos.Columns[e.ColumnIndex].Name == "Desde" && e.Value != null)
+            try
             {
-                e.Value = ((DateOnly)e.Value).ToString("dd/MM/yy");
-                e.FormattingApplied = true;
+                if (dgvTurnos.Columns[e.ColumnIndex].Name == "Desde" && e.Value != null)
+                {
+                    e.Value = ((DateOnly)e.Value).ToString("dd/MM/yy");
+                    e.FormattingApplied = true;
+                }
+                if (dgvTurnos.Columns[e.ColumnIndex].Name == "Hasta" && e.Value != null)
+                {
+                    e.Value = ((DateOnly)e.Value).ToString("dd/MM/yy");
+                    e.FormattingApplied = true;
+                }
             }
-            if (dgvTurnos.Columns[e.ColumnIndex].Name == "Hasta" && e.Value != null)
+            catch (Exception ex)
             {
-                e.Value = ((DateOnly)e.Value).ToString("dd/MM/yy");
-                e.FormattingApplied = true;
+                //ToDo: Añadir esta exepcion al log.
             }
         }
-
 
         public void Limpiar()
         {
             Validacion.LimpiarTodosErrores(this, eProvider);
         }
 
-        private void dgvTurnos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void frmEmergente_FormClosed(object sender, FormClosedEventArgs e)
         {
-
+            // Método a ejecutar cuando el formulario emergente se cierra
+            VariablesGlobales.ultimoTurnoId = TurnoLogica.Instancia.UltimoId();
+            ultimoTurnoIdApertura = TurnoLogica.Instancia.UltimoIdApertura();
+            Limpiar();
+            Listar();
         }
+
     }
 }
