@@ -48,7 +48,7 @@ namespace ControlVirtual.Vistas.Aplicacion
                 DataGridViewRow fila = dgvTurnos.Rows[hitTestInfo.RowIndex];
                 kpdDesde.Text = fila.Cells["Desde"].Value?.ToString();
                 kpHasta.Text = fila.Cells["Hasta"].Value?.ToString();
-
+                Limpiar();
             }
         }
 
@@ -95,21 +95,24 @@ namespace ControlVirtual.Vistas.Aplicacion
 
         private void btnEliminarTurno_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("¿Desea eliminar el último turno?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            VariablesGlobales.LaRespuestaEsSi = false;
+            frmMensaje frmMsj = new frmMensaje("¿Desea eliminar el último turno?");
+            frmMsj.ShowDialog();
 
-            if (dialogResult == DialogResult.Yes)
+
+            if (VariablesGlobales.LaRespuestaEsSi)
             {
                 Turnos Objeto = new Turnos()
                 {
                     TurnoId = VariablesGlobales.ultimoTurnoId
                 };
-
                 bool respuesta = TurnoLogica.Instancia.Eliminar(Objeto);
                 //TODO: Aqui tengo que eliminar todas las tablas que tienen ese dia implementado cuando vaya a eliminar el TurnoID de la base de datos
                 if (respuesta)
                 {
                     Listar();
                     Limpiar();
+                    VariablesGlobales.LaRespuestaEsSi = false;
                 }
             }
         }
@@ -121,6 +124,7 @@ namespace ControlVirtual.Vistas.Aplicacion
 
         private void btnCerrarPeriodo_Click(object sender, EventArgs e)
         {
+            Limpiar();
             frmCerrarPeriodo frmEmergente = new frmCerrarPeriodo();
             frmEmergente.FormClosed += frmEmergente_FormClosed;
             frmEmergente.ShowDialog();
@@ -175,6 +179,5 @@ namespace ControlVirtual.Vistas.Aplicacion
             Limpiar();
             Listar();
         }
-
     }
 }
